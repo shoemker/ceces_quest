@@ -1,4 +1,3 @@
-const Util = require("./utils");
 const Enemy = require("./enemy");
 const Snake = require("./snake");
 const Skeleton = require("./skeleton");
@@ -7,6 +6,8 @@ const CeCe = require("./cece");
 const Fireball = require("./fireball");
 const Background1 = require("./background1")
 const Background2 = require("./background2")
+const Utils = require("./utils");
+
 
 class Game {
 
@@ -30,6 +31,7 @@ class Game {
 		this.loadEnemiesImg();
 		this.loadFireball();
 
+		this.ceceImg = Utils.loadImg('./images/cece/Cece.png');
 
 		this.fireball = null;
 
@@ -154,8 +156,23 @@ class Game {
 		ctx.textAlign = "center";
 		ctx.font = "35px HalfBoldPixel";
 
-		ctx.fillText("Welcome to Land of Nostalgia!", this.dim_x / 2, 200);
-		ctx.fillText("Click to Start", this.dim_x / 2, 250);
+		ctx.drawImage(this.ceceImg,
+			0,
+			0,
+			700,
+			1000,
+			130,
+			50,
+			550,
+			800);
+
+		ctx.fillText("Welcome to", this.dim_x / 2, 200);
+		ctx.font = "70px HalfBoldPixel";
+
+		ctx.fillText("Cece's Quest", this.dim_x / 2, 280);
+
+		ctx.font = "35px HalfBoldPixel";
+		ctx.fillText("Click to Start", this.dim_x / 2, 700);
 	}
 
 	drawLose(ctx) {
@@ -164,7 +181,7 @@ class Game {
 		ctx.textAlign = "center";
 		ctx.font = "35px HalfBoldPixel";
 
-		ctx.fillText("Sorry, Link has no more hitpoints.", this.dim_x / 2, 200);
+		ctx.fillText("Sorry, Cece has no more hitpoints.", this.dim_x / 2, 200);
 		ctx.fillText("Game Over!", this.dim_x / 2, 250);
 
 	}
@@ -264,7 +281,7 @@ class Game {
 		this.collision = false;
 		// debugger
 		this.enemies.forEach(enemy => { 
-			let distance = Util.distance(this.cece.center(),enemy.center());
+			let distance = Utils.distance(this.cece.center(),enemy.center());
 
 			if (distance < (this.cece.radius + enemy.radius +2)) {
 				this.countToThirty++;
@@ -278,7 +295,7 @@ class Game {
 		})
 
 		this.rupees.forEach((rupee,i) => { 
-			let distance = Util.distance(this.cece.center(),rupee.center());
+			let distance = Utils.distance(this.cece.center(),rupee.center());
 			if (distance < 30 ) {
 			
 				this.rupees.splice(i, 1)
@@ -298,7 +315,7 @@ class Game {
 		const tip = this.cece.swordTipPos();
 		this.enemies.forEach((enemy,i) => { 
 			if (tip !== null) {
-				const distance = Util.distance(tip, enemy.center());
+				const distance = Utils.distance(tip, enemy.center());
 
 				if (distance < enemy.radius) {
 					this.countToThirty++;		
@@ -314,7 +331,7 @@ class Game {
 				} 
 			}
 
-			if (this.fireball && Util.distance(this.fireball.center(), enemy.center()) < 21) {
+			if (this.fireball && Utils.distance(this.fireball.center(), enemy.center()) < 21) {
 				this.countToThirty++;
 				this.message = "Hit!"
 				enemy.hitPoints--;
@@ -333,20 +350,20 @@ class Game {
 
 	launchFireball() {
 		let position = this.cece.swordTipPos();
-		let direction = this.cece.direction/2;
+		let direction = this.cece.getDirection();
 		let velocity;
 		
 		switch (direction) {
-			case 8:
+			case 0:
 				velocity = [0, -1];
 				break;
-			case 9:
+			case 4:
 				velocity = [-1, 0];
 				break;
-			case 10:
+			case 8:
 				velocity = [0, 1];
 				break;
-			case 11:
+			case 12:
 				velocity = [1, 0];
 				break;				
 			default:

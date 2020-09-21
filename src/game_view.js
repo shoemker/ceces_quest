@@ -2,7 +2,6 @@ const Game = require("./game");
 const CeCe = require("./cece");
 
 
-
 class GameView {
  
 	constructor(ctx, width, height){

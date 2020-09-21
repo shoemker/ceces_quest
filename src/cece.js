@@ -12,7 +12,6 @@ class CeCe extends MovingObject {
 		this.unlockFireball = false;
 
 		this.imageArray = [];
-		this.loadImages();
 
 		this.direction = 4;
 		this.idx = 0;
@@ -34,6 +33,9 @@ class CeCe extends MovingObject {
 			[300,0],    [332, 0],   [365,0],   [397, 0],
 			[300,96],   [332, 96],  [365,96],  [397, 96]];
 	}
+
+	getDirection() { return this.direction; };
+
 
 	reduceHitPoints() {
 		return this.hitpoints--;
