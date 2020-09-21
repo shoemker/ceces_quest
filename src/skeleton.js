@@ -34,6 +34,8 @@ class Skeleton extends Enemy {
 			this.width,
 			this.height);
 
+		super.drawObject(ctx);
+
 	}
 }
 

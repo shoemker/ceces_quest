@@ -1,17 +1,17 @@
 const Game = require("./game");
-const Link = require("./link");
+const CeCe = require("./cece");
 
 
 
 class GameView {
-
+ 
 	constructor(ctx, width, height){
 		this.width = width;
 		this.ctx = ctx;
 		let map = 1;
 		this.game = new Game(width, height, map);
 
-		this.link = this.game.add(new Link(this.ctx));
+		this.cece = this.game.add(new CeCe(this.ctx));
 
 	}
 
@@ -37,12 +37,12 @@ class GameView {
 
 		if (!this.game.opening) this.game.step(timeDelta);
 
-		if (this.game.map ===1 && this.link.pos[0] < 50) {
+		if (this.game.map ===1 && this.cece.pos[0] < 50) {
 			this.game.map = 2;
-			this.link.map = this.game.b2;
+			this.cece.map = this.game.b2;
 			this.game.enemies = [];
 			this.game.addEnemies();
-			this.link.pos = [700, 450];
+			this.cece.pos = [700, 450];
 		}
 		this.game.draw(this.ctx);
 		this.lastTime = time;
@@ -66,12 +66,12 @@ class GameView {
 		const that = this;
 		
 		Object.keys(MOVES).forEach((ele) => {
-			key(ele, () => { that.link.move(MOVES[ele], this.game.opening); })
+			key(ele, () => { that.cece.move(MOVES[ele], this.game.opening); })
 		});
 
 		key("space", () => { 
-			that.link.attack(); 
-			if (that.link.unlock) {
+			// that.cece.attack(); 
+			if (that.cece.unlock) {
 				that.game.launchFireball();
 			}
 		});

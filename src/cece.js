@@ -1,12 +1,12 @@
 const MovingObject = require("./moving_object");
+const Utils = require("./utils");
 
-
-class Link extends MovingObject {
+class CeCe extends MovingObject {
 
 	constructor(ctx) {
 		super({pos:[600,90], radius:15})
-		this.height = 30;
-		this.width = 30;
+		this.height = 32;
+		this.width = 32;
 		this.radius = 15
 		this.ctx = ctx;
 		this.unlockFireball = false;
@@ -27,7 +27,12 @@ class Link extends MovingObject {
 		this.rupees = 0;
 		this.gameOver = false;
 		this.map;
- 
+		this.cece_sheet = Utils.loadImg('./images/cece/rpg-maker-sprites-and-facial-expression-sets-3e26.png');
+		this.cece_sheet_pos = 
+			[[300,145], [332, 145], [365,145], [397, 145],
+			[300,48],   [332, 48],  [365,48],  [397, 48],
+			[300,0],    [332, 0],   [365,0],   [397, 0],
+			[300,96],   [332, 96],  [365,96],  [397, 96]];
 	}
 
 	reduceHitPoints() {
@@ -61,8 +66,8 @@ class Link extends MovingObject {
 
 	// switches image for walking animation
 	switchImage() {
-		if (this.idx === 0) this.idx = 1;
-		else this.idx = 0
+		if (this.idx === 3) this.idx = 0;
+		else this.idx++;
 	}
 	
 
@@ -71,40 +76,39 @@ class Link extends MovingObject {
 		if (brighten) ctx.filter = "brightness(170%)";
 		else ctx.filter = "brightness(100%)";
 
-		// draws Link
-		if (this.gameOver) {
-			ctx.drawImage(this.linkOver,
-										this.pos[0]-20,
-										this.pos[1]-30,
-										this.width+45,
-										this.height+30);
-		} else {
 
-			ctx.drawImage(this.imageArray[this.direction + this.idx], 
-									this.pos[0], 
-									this.pos[1], 
-									this.width, 
-									this.height);
-		}
+		// console.log(this.direction + ", " + this.idx);
+
+		ctx.drawImage(this.cece_sheet,
+			this.cece_sheet_pos[this.direction + this.idx][0],
+			this.cece_sheet_pos[this.direction + this.idx][1],
+			32,
+			48,
+			this.pos[0],
+			this.pos[1],
+			this.width,
+			this.height);
+			
+		
 
 		// lets the attack animation stay for several cycles
 		// and resets image at the end
-		if (this.direction >= 8) {
-			if (this.attackAnimationCount === this.maxCount) {
+		// if (this.direction >= 8) {
+		// 	if (this.attackAnimationCount === this.maxCount) {
 
-				this.direction = this.directionHistory;
-				this.pos[0] = this.posHistory[0];
-				this.pos[1] = this.posHistory[1];
+		// 		this.direction = this.directionHistory;
+		// 		this.pos[0] = this.posHistory[0];
+		// 		this.pos[1] = this.posHistory[1];
 
-				this.attackAnimationCount = 0
-				this.height = 30;
-				this.width = 30;
-			}
-			else {
-				this.attackAnimationCount++;
+		// 		this.attackAnimationCount = 0
+		// 		this.height = 30;
+		// 		this.width = 30;
+		// 	}
+		// 	else {
+		// 		this.attackAnimationCount++;
 
-			}
-		}
+		// 	}
+		// }
 	}
 
 
@@ -115,7 +119,7 @@ class Link extends MovingObject {
 	}
 
 	moveOnce(deltaPos) {
-	
+		// console.log(deltaPos);
 		if (this.map.checkBounds(this.center()[0] + deltaPos[0], this.center()[1] + deltaPos[1])) {
 
 			this.direction = 0;
@@ -124,11 +128,13 @@ class Link extends MovingObject {
 
 			// sets direction for drawing image
 			if (deltaPos[0] === 0 && deltaPos[1] < 0) this.direction = 0;
-			else if (deltaPos[0] < 0 && deltaPos[1] === 0) this.direction = 2;
-			else if (deltaPos[0] === 0 && deltaPos[1] > 0) this.direction = 4;
-			else this.direction = 6;
+			else if (deltaPos[0] < 0 && deltaPos[1] === 0) this.direction = 4;
+			else if (deltaPos[0] === 0 && deltaPos[1] > 0) this.direction = 8;
+			else this.direction = 12;
 
 			this.switchImage();	
+			console.log(this.pos);
+
 		}
 	}		
 
@@ -161,6 +167,7 @@ class Link extends MovingObject {
 
 	// loads all of the link images
 	loadImages() {
+
 		// north 'w'
 		this.lbu1 = new Image();
 		this.lbu1.onload = () => { return true; }
@@ -238,4 +245,4 @@ class Link extends MovingObject {
 	
 }
 
-module.exports = Link;
+module.exports = CeCe;

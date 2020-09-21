@@ -6,18 +6,14 @@ const Util = {
 		return Math.sqrt(xdist*xdist + ydist*ydist);
 	},
 
-	norm(pt) {
-		return distance([0,0], pt);
-	},
 
-	randomVec(length) {
-		const deg = 2 * Math.PI * Math.random();
-		return Util.scale([Math.sin(deg), Math.cos(deg)], length);
+
+	loadImg(file) {
+		let img = new Image();
+		img.onload = () => { return true; }
+		img.src = file;
+		return img;
 	},
-	// Scale the length of a vector by the given amount.
-	scale(vec, m) {
-		return [vec[0] * m, vec[1] * m];
-	}
 };
 
 module.exports = Util;

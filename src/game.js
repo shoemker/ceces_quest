@@ -3,7 +3,7 @@ const Enemy = require("./enemy");
 const Snake = require("./snake");
 const Skeleton = require("./skeleton");
 const Rupee = require("./rupee");
-const Link = require("./link");
+const CeCe = require("./cece");
 const Fireball = require("./fireball");
 const Background1 = require("./background1")
 const Background2 = require("./background2")
@@ -99,10 +99,10 @@ class Game {
 			this.enemies.push(object);
 			return this.enemies;
 		}
-		else if (object instanceof Link){
-			this.link = object;
-			this.link.map = this.b1;
-			return this.link;
+		else if (object instanceof CeCe){
+			this.cece = object;
+			this.cece.map = this.b1;
+			return this.cece;
 		}
 		else if (object instanceof Rupee){
 			this.rupees.push(object);
@@ -125,8 +125,8 @@ class Game {
 		this.drawHitpointsBar(ctx);
 
 
-		if (this.link.hitpoints <= 0) {
-			// this.link.gameOver = true;
+		if (this.cece.hitpoints <= 0) {
+			// this.cece.gameOver = true;
 			this.drawLose(ctx);
 			this.enemies = [];
 		} else if (this.win) {
@@ -141,8 +141,8 @@ class Game {
 	
 
 		if (this.countToThirty > 0 && this.countToThirty%2 === 0 && this.collision) 
-			this.link.drawObject(ctx, true );
-		else this.link.drawObject(ctx, false);
+			this.cece.drawObject(ctx, true );
+		else this.cece.drawObject(ctx, false);
 
 		if (this.opening) this.drawOpening(ctx);
 	}
@@ -204,13 +204,13 @@ class Game {
 		ctx.textAlign = "center";
 		ctx.font = "20px HalfBoldPixel";
 		ctx.fillText("Rupees", 50,50);
-		ctx.fillText(this.link.rupees, 50, 70);
+		ctx.fillText(this.cece.rupees, 50, 70);
 	}
 
 	drawHitpointsBar(ctx) {
 		ctx.fillStyle = "white";
 		ctx.fillRect(720, 40, 20, 90);
-		let hp = this.link.hitpoints;
+		let hp = this.cece.hitpoints;
 
 		if (hp > 2) ctx.fillStyle = "green";
 		else ctx.fillStyle = "red";
@@ -245,14 +245,14 @@ class Game {
 	checkForWin(){
 		if (this.map === 2 && this.enemies.length === 0) {
 			this.message = "Strike chest for the the win!"
-			const tip = this.link.swordTipPos();
+			const tip = this.cece.swordTipPos();
 			if(tip != null) console.log(tip);
 			if (tip != null && 
 				tip[0] >= 10 && tip[0] <= 60 &&
 				tip[1] >= 90 && tip[1] <= 133) {
 
 				this.b2.chestImgX = 428;
-				this.link.gameOver = true;
+				this.cece.gameOver = true;
 				this.win = true;
 				
 			}
@@ -264,28 +264,28 @@ class Game {
 		this.collision = false;
 		// debugger
 		this.enemies.forEach(enemy => { 
-			let distance = Util.distance(this.link.center(),enemy.center());
+			let distance = Util.distance(this.cece.center(),enemy.center());
 
-			if (distance < (this.link.radius + enemy.radius +2)) {
+			if (distance < (this.cece.radius + enemy.radius +2)) {
 				this.countToThirty++;
 				this.collision = true;
 				this.message = "Ouch!";
 				
-				this.link.reduceHitPoints();
+				this.cece.reduceHitPoints();
 		
 				this.messageCount=1;
 			}
 		})
 
 		this.rupees.forEach((rupee,i) => { 
-			let distance = Util.distance(this.link.center(),rupee.center());
+			let distance = Util.distance(this.cece.center(),rupee.center());
 			if (distance < 30 ) {
 			
 				this.rupees.splice(i, 1)
-				this.link.rupees++;
-				if (this.link.rupees === 3) {
+				this.cece.rupees++;
+				if (this.cece.rupees === 3) {
 					this.message = "Fireballs when you attack!"
-					this.link.unlock = true;
+					this.cece.unlock = true;
 				}
 				else this.message = "You found a rupee!"
 
@@ -295,7 +295,7 @@ class Game {
 	}
 
 	checkHit() {
-		const tip = this.link.swordTipPos();
+		const tip = this.cece.swordTipPos();
 		this.enemies.forEach((enemy,i) => { 
 			if (tip !== null) {
 				const distance = Util.distance(tip, enemy.center());
@@ -332,8 +332,8 @@ class Game {
 	}
 
 	launchFireball() {
-		let position = this.link.swordTipPos();
-		let direction = this.link.direction;
+		let position = this.cece.swordTipPos();
+		let direction = this.cece.direction/2;
 		let velocity;
 		
 		switch (direction) {
