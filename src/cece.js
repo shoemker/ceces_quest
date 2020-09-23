@@ -5,7 +5,7 @@ class CeCe extends MovingObject {
 
 	constructor(ctx) {
 		super({pos:[600,110], radius:15})
-		this.height = 32;
+		this.height = 40;
 		this.width = 32;
 		this.radius = 15
 		this.ctx = ctx;

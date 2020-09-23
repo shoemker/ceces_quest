@@ -1,3 +1,4 @@
+const Utils = require("./utils");
 
 class Background1 {
 	constructor(dim_x, dim_y) {
@@ -5,6 +6,7 @@ class Background1 {
 		this.dim_y = dim_y;
 
 		this.loadBackground1();
+		this.bouvierImg = Utils.loadImg('./images/Bouvier_des_Flandres_B_W_Small_Filee.png');
 	}
 
 
@@ -52,9 +54,9 @@ class Background1 {
 
 			ctx.drawImage(this.background1, 192, 0, 64, 64, 700, 94 + i * 2 * 64, 64, 64);
 			ctx.drawImage(this.background1, 128, 0, 64, 64, 700, 30 + i * 2 * 64, 64, 64);
-
-
 		}
+
+		ctx.drawImage(this.bouvierImg, 80, 20, 320, 330, 300, 100, 50, 50);
 	}
 
 	checkBounds(x, y) {
