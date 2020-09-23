@@ -10,7 +10,7 @@ class GameView {
 		let map = 1;
 		this.game = new Game(width, height, map);
 
-		this.cece = this.game.add(new CeCe(this.ctx));
+		this.cece = this.game.add(new CeCe);
 
 	}
 
@@ -18,6 +18,7 @@ class GameView {
 	openingOff(){
 		this.game.opening = false;
 		this.cece.activateBullySpeech();
+		this.game.message = "Maybe the bouvier could help";
 	}
 
 	start() {

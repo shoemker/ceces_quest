@@ -5,7 +5,6 @@ class Fireball extends MovingObject {
 	constructor(options) {
 		super(options);
 		this.img = options.img;
-
 	}
 
 	center() {

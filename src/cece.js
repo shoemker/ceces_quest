@@ -3,13 +3,13 @@ const Utils = require("./utils");
 
 class CeCe extends MovingObject {
 
-	constructor(ctx) {
+	constructor() {
 		super({pos:[600,110], radius:15})
 		this.height = 40;
 		this.width = 32;
 		this.radius = 15
-		this.ctx = ctx;
-		this.unlockFireball = true;
+
+		this.fireball = false;
 
 		this.imageArray = [];
 
@@ -38,7 +38,9 @@ class CeCe extends MovingObject {
 
 	getDirection() { return this.direction; };
 	activateBullySpeech() { this.bullySpeech = true; };
-	fireballUnlocked() { return this.unlockFireball; };
+	fireballUnlocked() { return this.fireball; };
+	unlockFireball() { this.fireball = true; };
+	getPos() { return this.pos; };
 
 	reduceHitPoints() {
 		return this.hitpoints--;
@@ -78,7 +80,6 @@ class CeCe extends MovingObject {
 		else ctx.filter = "brightness(100%)";
 
 
-		// console.log(this.direction + ", " + this.idx);
 
 		ctx.drawImage(this.cece_sheet,
 			this.cece_sheet_pos[this.direction + this.idx][0],
@@ -92,24 +93,6 @@ class CeCe extends MovingObject {
 			
 		if (this.bullySpeech > 0) this.drawBullySpeech(ctx);
 
-		// lets the attack animation stay for several cycles
-		// and resets image at the end
-		// if (this.direction >= 8) {
-		// 	if (this.attackAnimationCount === this.maxCount) {
-
-		// 		this.direction = this.directionHistory;
-		// 		this.pos[0] = this.posHistory[0];
-		// 		this.pos[1] = this.posHistory[1];
-
-		// 		this.attackAnimationCount = 0
-		// 		this.height = 30;
-		// 		this.width = 30;
-		// 	}
-		// 	else {
-		// 		this.attackAnimationCount++;
-
-		// 	}
-		// }
 	};
 
 
@@ -152,111 +135,6 @@ class CeCe extends MovingObject {
 		}
 	}		
 
-	// temporarily sets image to attack image
-	// attack() {
-	// 	if (this.attackAnimationCount === 0 && this.hitpoints > 0) {
-	// 		this.directionHistory = this.direction;
-	// 		this.posHistory[0] = this.pos[0];
-	// 		this.posHistory[1] = this.pos[1];
-
-	// 		// changes position and size to account for bigger attack image
-	// 		if (this.direction === 0){
-	// 			this.height = 1.8 * this.height;
-	// 			this.pos[1] -= 24;
-	// 		} else if (this.direction === 2) {
-	// 			this.width = 1.8 * this.width;
-	// 			this.pos[0] -= 24;
-	// 		} else if (this.direction === 4) {
-	// 			this.height = 1.8 * this.height;
-	// 		} else if (this.direction === 6) {
-	// 			this.width = 1.8 * this.width;
-	// 		}
-
-	// 		this.direction = this.direction/2 + 8;
-	// 		this.idx = 0; 
-	// 		this.swordTipPos();
-	// 	}
-
-	// }
-
-	// loads all of the link images
-	// loadImages() {
-
-	// 	// north 'w'
-	// 	this.lbu1 = new Image();
-	// 	this.lbu1.onload = () => { return true; }
-	// 	this.lbu1.src = './images/link/lbu1.png';
-	// 	this.imageArray.push(this.lbu1);
-
-	// 	this.lbu2 = new Image();
-	// 	this.lbu2.onload = () => { return true; }
-	// 	this.lbu2.src = './images/link/lbu2.png';
-	// 	this.imageArray.push(this.lbu2);
-	
-
-	// 	// west 'a'
-	// 	this.llu2 = new Image();
-	// 	this.llu2.onload = () => { return true; }
-	// 	this.llu2.src = './images/link/llu2.png';
-	// 	this.imageArray.push(this.llu2);		
-
-	// 	this.llu1 = new Image();
-	// 	this.llu1.onload = () => { return true; }
-	// 	this.llu1.src = './images/link/llu1.png';
-	// 	this.imageArray.push(this.llu1);
-		
-
-	// 	// south 's'
-	// 	this.lfu1 = new Image();
-	// 	this.lfu1.onload = () => { return true; }
-	// 	this.lfu1.src = './images/link/lfu1.png';
-	// 	this.imageArray.push(this.lfu1);
-
-	// 	this.lfu2 = new Image();
-	// 	this.lfu2.onload = () => { return true; }
-	// 	this.lfu2.src = './images/link/lfu2.png';
-	// 	this.imageArray.push(this.lfu2);
-
-
-	// 	// east 'd'
-	// 	this.lru1 = new Image();
-	// 	this.lru1.onload = () => { return true; }
-	// 	this.lru1.src = './images/link/lru1.png';
-	// 	this.imageArray.push(this.lru1);
-
-	// 	this.lru2 = new Image();
-	// 	this.lru2.onload = () => { return true; }
-	// 	this.lru2.src = './images/link/lru2.png';
-	// 	this.imageArray.push(this.lru2);
-		
-
-	// 	////////////////////////////////////////
-	// 	// load attack animations
-	// 	this.lba = new Image();
-	// 	this.lba.onload = () => { return true; }
-	// 	this.lba.src = './images/link/lba.png';
-	// 	this.imageArray.push(this.lba);
-
-	// 	this.lla = new Image();
-	// 	this.lla.onload = () => { return true; }
-	// 	this.lla.src = './images/link/lla.png';
-	// 	this.imageArray.push(this.lla);
-		
-	// 	this.lfa = new Image();
-	// 	this.lfa.onload = () => { return true; }
-	// 	this.lfa.src = './images/link/lfa.png';
-	// 	this.imageArray.push(this.lfa);
-
-	// 	this.lra = new Image();
-	// 	this.lra.onload = () => { return true; }
-	// 	this.lra.src = './images/link/lra.png';
-	// 	this.imageArray.push(this.lra);
-
-	// 	this.linkOver = new Image();
-	// 	this.linkOver.onload = () => { return true; }
-	// 	this.linkOver.src = './images/link/link_aloft.png';
-	// }
-	
 }
 
 module.exports = CeCe;

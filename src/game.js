@@ -18,20 +18,21 @@ class Game {
 		this.dim_x = dim_x;
 		this.dim_y = dim_y;
 		this.map = map;
+
+		this.nosebumpCounter = 0;
 		this.countToThirty = 0;
 		this.messageCount = 0;
 		this.message = "Good Luck!";
 		
+
 		this.opening = true;
 		this.win = false;
 
-		this.rupeeImg = this.loadRupee();
-
 		// load images
-		this.loadEnemiesImg();
 		this.fireballImg = Utils.loadImg('./images/poop.png');
-
+		this.enemiesImg = Utils.loadImg('./images/enemies.png');
 		this.ceceImg = Utils.loadImg('./images/cece/Cece.png');
+		this.rupeeImg = Utils.loadImg('./images/BotW_Green_Rupee_Icon.png');
 
 		this.fireball = null;
 
@@ -134,8 +135,6 @@ class Game {
 		} else if (this.win) {
 			this.drawWin(ctx);
 		}
-
-		
 	
 		this.enemies.forEach(ele => { ele.drawObject(ctx); });
 		this.rupees.forEach(ele => { ele.drawObject(ctx); });
@@ -147,8 +146,24 @@ class Game {
 		else this.cece.drawObject(ctx, false);
 
 		if (this.opening) this.drawOpening(ctx);
+
+		if (this.nosebumpCounter > 0) this.drawNoseBump(ctx);
+		// if (this.opening) this.drawNoseBump(ctx);
+
 	}
 
+	drawNoseBump(ctx){
+		this.message = "Use spacebar to attack!";
+		ctx.fillStyle = "white";
+		ctx.font = "96px HalfBoldPixel";
+		ctx.fillText("Nose Bump!", 375, 300);
+		ctx.font = "24px HalfBoldPixel";
+
+		ctx.fillText("Use spacebar to attack!", 375, 375 );
+
+		this.nosebumpCounter++;
+		if (this.nosebumpCounter > 40) this.nosebumpCounter = 0;
+	};
 
 	drawOpening(ctx) {
 
@@ -161,9 +176,9 @@ class Game {
 			0,
 			700,
 			1000,
-			130,
+			140,
 			50,
-			550,
+			530,
 			800);
 
 		ctx.fillText("Welcome to", this.dim_x / 2, 200);
@@ -198,7 +213,8 @@ class Game {
 	drawMessage(ctx){
 		if (this.messageCount === 30) this.messageCount = 0;
 		else if (this.messageCount > 0 || 
-							this.message.startsWith("Good Luck!")) {
+							this.message.startsWith("Good Luck!") ||
+							this.message.startsWith("Maybe the bouvier")) {
 
 			ctx.font = "30px HalfBoldPixel";
 			
@@ -255,15 +271,28 @@ class Game {
 
 		this.checkForWin();
 
+		if (!this.cece.fireballUnlocked()) this.checkForNoseBump();
 
 		this.moveObjects(timeDelta);
 	}
+
+
+	checkForNoseBump(){
+		// console.log(this.cece.getPos());
+		const pos = this.cece.getPos();
+
+		if (pos[0] >= 330 && pos[0] <= 345 && pos[1]<=110 && pos[1] >= 95) {
+			
+			this.cece.unlockFireball();
+			this.nosebumpCounter = 1;
+		}
+	};
 
 	checkForWin(){
 		if (this.map === 2 && this.enemies.length === 0) {
 			this.message = "Strike chest for the the win!"
 			const tip = this.cece.swordTipPos();
-			// if(tip != null) console.log(tip);
+			if(tip != null) console.log(tip);
 			if (tip != null && 
 				tip[0] >= 10 && tip[0] <= 60 &&
 				tip[1] >= 90 && tip[1] <= 133) {
@@ -380,24 +409,6 @@ class Game {
 		this.enemies.forEach(enemy => { enemy.move(timeDelta); });
 		if (this.fireball) this.fireball.move(4);
 	}
-
-
-
-	loadEnemiesImg() {
-		// drawImage(this.image, xOnSheet,yOnSheet,width, height,xcoord, ycoord, width, height)
-		this.enemiesImg = new Image();
-		this.enemiesImg.onload = () => { return true; }
-		this.enemiesImg.src = './images/enemies.png';
-	}
-
-	loadRupee() {
-		let rup = new Image();
-		rup.onload = () => { return true; }
-		rup.src = './images/BotW_Green_Rupee_Icon.png';
-		return rup;
-	}
-
-	
 }
 
 
