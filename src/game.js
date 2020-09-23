@@ -29,7 +29,7 @@ class Game {
 
 		// load images
 		this.loadEnemiesImg();
-		this.loadFireball();
+		this.fireballImg = Utils.loadImg('./images/poop.png');
 
 		this.ceceImg = Utils.loadImg('./images/cece/Cece.png');
 
@@ -46,7 +46,7 @@ class Game {
 		
 		if (this.map === 2) {
 			this.add(new Snake({
-				pos: [100, 100],
+				pos: [150, 100],
 				vel: [1, 1],
 				radius: 15,
 				map: this.b2,
@@ -71,7 +71,7 @@ class Game {
 		} else if (this.map === 1) {
 		
 			this.add(new Skeleton({
-				pos: [100, 100],
+				pos: [200, 500],
 				vel: [1, 1],
 				radius: 15,
 				map: this.b1,
@@ -87,7 +87,7 @@ class Game {
 			}))
 
 			this.add(new Skeleton({
-				pos: [650, 600],
+				pos: [125, 600],
 				vel: [1, 1],
 				radius: 15,
 				map: this.b1,
@@ -263,7 +263,7 @@ class Game {
 		if (this.map === 2 && this.enemies.length === 0) {
 			this.message = "Strike chest for the the win!"
 			const tip = this.cece.swordTipPos();
-			if(tip != null) console.log(tip);
+			// if(tip != null) console.log(tip);
 			if (tip != null && 
 				tip[0] >= 10 && tip[0] <= 60 &&
 				tip[1] >= 90 && tip[1] <= 133) {
@@ -301,7 +301,6 @@ class Game {
 				this.rupees.splice(i, 1)
 				this.cece.rupees++;
 				if (this.cece.rupees === 3) {
-					this.message = "Fireballs when you attack!"
 					this.cece.unlock = true;
 				}
 				else this.message = "You found a rupee!"
@@ -312,24 +311,24 @@ class Game {
 	}
 
 	checkHit() {
-		const tip = this.cece.swordTipPos();
+		// const tip = this.cece.swordTipPos();
 		this.enemies.forEach((enemy,i) => { 
-			if (tip !== null) {
-				const distance = Utils.distance(tip, enemy.center());
+			// if (tip !== null) {
+			// 	const distance = Utils.distance(tip, enemy.center());
 
-				if (distance < enemy.radius) {
-					this.countToThirty++;		
-					this.message = "Hit!"	
-					enemy.hitPoints--;
-					this.messageCount=1;
-					if (enemy.hitPoints <= 0)		{
-						this.enemies.splice(i,1)
-						this.message = "Enemy Killed";
-						this.add(new Rupee(enemy.pos, this.rupeeImg));
+			// 	if (distance < enemy.radius) {
+			// 		this.countToThirty++;		
+			// 		this.message = "Hit!"	
+			// 		enemy.hitPoints--;
+			// 		this.messageCount=1;
+			// 		if (enemy.hitPoints <= 0)		{
+			// 			this.enemies.splice(i,1)
+			// 			this.message = "Enemy Killed";
+			// 			this.add(new Rupee(enemy.pos, this.rupeeImg));
 
-					}
-				} 
-			}
+			// 		}
+			// 	} 
+			// }
 
 			if (this.fireball && Utils.distance(this.fireball.center(), enemy.center()) < 21) {
 				this.countToThirty++;
@@ -355,21 +354,20 @@ class Game {
 		
 		switch (direction) {
 			case 0:
-				velocity = [0, -1];
+				velocity = [0, -2];
 				break;
 			case 4:
-				velocity = [-1, 0];
+				velocity = [-2, 0];
 				break;
 			case 8:
-				velocity = [0, 1];
+				velocity = [0, 2];
 				break;
 			case 12:
-				velocity = [1, 0];
+				velocity = [2, 0];
 				break;				
 			default:
 				velocity = [0, 0];
 		}
-
 		this.fireball = new Fireball({
 			pos: [position[0] - 7, position[1] - 7],
 			vel: velocity,
@@ -383,11 +381,7 @@ class Game {
 		if (this.fireball) this.fireball.move(4);
 	}
 
-	loadFireball() {
-		this.fireballImg = new Image();
-		this.fireballImg.onload = () => { return true; }
-		this.fireballImg.src = './images/fireball.png';
-	}
+
 
 	loadEnemiesImg() {
 		// drawImage(this.image, xOnSheet,yOnSheet,width, height,xcoord, ycoord, width, height)

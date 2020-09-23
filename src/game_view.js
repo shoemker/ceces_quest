@@ -14,14 +14,10 @@ class GameView {
 
 	}
 
-	// start(){
-
-	// 	this.bindKeyHandlers();
-	// 	setInterval(this.moveAndDraw, 30);
-	// }
 
 	openingOff(){
-		this.game.opening = false
+		this.game.opening = false;
+		this.cece.activateBullySpeech();
 	}
 
 	start() {
@@ -70,7 +66,7 @@ class GameView {
 
 		key("space", () => { 
 			// that.cece.attack(); 
-			if (that.cece.unlock) {
+			if (that.cece.fireballUnlocked()) {
 				that.game.launchFireball();
 			}
 		});

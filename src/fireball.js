@@ -6,7 +6,6 @@ class Fireball extends MovingObject {
 		super(options);
 		this.img = options.img;
 
-
 	}
 
 	center() {
@@ -14,7 +13,7 @@ class Fireball extends MovingObject {
 	}
 
 	drawObject(ctx) {
-		ctx.drawImage(this.img, 150, 0, 600, 600, this.pos[0], this.pos[1], this.radius, this.radius);
+		ctx.drawImage(this.img, 0, 0, 220, 220, this.pos[0], this.pos[1], this.radius, this.radius);
 
 	}
 

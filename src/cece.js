@@ -4,17 +4,19 @@ const Utils = require("./utils");
 class CeCe extends MovingObject {
 
 	constructor(ctx) {
-		super({pos:[600,90], radius:15})
+		super({pos:[600,110], radius:15})
 		this.height = 32;
 		this.width = 32;
 		this.radius = 15
 		this.ctx = ctx;
-		this.unlockFireball = false;
+		this.unlockFireball = true;
 
 		this.imageArray = [];
 
-		this.direction = 4;
+		this.direction = 8;
 		this.idx = 0;
+
+		this.bullySpeech = false;
 
 		this.directionHistory = [];
 		this.posHistory=[];
@@ -35,35 +37,32 @@ class CeCe extends MovingObject {
 	}
 
 	getDirection() { return this.direction; };
-
+	activateBullySpeech() { this.bullySpeech = true; };
+	fireballUnlocked() { return this.unlockFireball; };
 
 	reduceHitPoints() {
 		return this.hitpoints--;
 	}
 
 	center() {
-		if (this.direction >= 8) {
-			return [this.posHistory[0] + 15, this.posHistory[1] + 15]; 
-		} else return [this.pos[0] + 15, this.pos[1] + 15];
+ 		return [this.pos[0] + 15, this.pos[1] + 15];
 	}
 
 
 	swordTipPos(){
-		if (this.direction >= 8) {
-
+		
 			let center = this.center();
-
-			if (this.direction === 8) {
+		
+			if (this.direction === 0) {
 				return [center[0]-3, center[1]-this.radius-1.6*this.radius];
-			} else if (this.direction === 9) {
+			} else if (this.direction === 4) {
 				return [center[0] -this.radius - 1.6 * this.radius, center[1]+2];
-			} else if (this.direction === 10) {
+			} else if (this.direction === 8) {
 				return [center[0]+1, center[1] + this.radius + 1.6 * this.radius];
 			} else {
 				return [center[0] + this.radius + 1.6 * this.radius, center[1] + 2];
 			}
-		}
-		else return null;
+	
 	}
 
 	// switches image for walking animation
@@ -91,7 +90,7 @@ class CeCe extends MovingObject {
 			this.width,
 			this.height);
 			
-		
+		if (this.bullySpeech > 0) this.drawBullySpeech(ctx);
 
 		// lets the attack animation stay for several cycles
 		// and resets image at the end
@@ -111,17 +110,31 @@ class CeCe extends MovingObject {
 
 		// 	}
 		// }
-	}
+	};
+
+
+	drawBullySpeech(ctx) {
+		Utils.drawSpeechBubble(ctx,
+			{ x: this.pos[0] - 60, y: this.pos[1] - 20}, 110, 95,
+			{ x: this.pos[0] + 10, y: this.pos[1] + 10});
+
+
+		Utils.drawText(ctx, this.pos[0] -60, this.pos[1] -35, "I want to fight");
+		Utils.drawText(ctx, this.pos[0] - 60, this.pos[1] - 15, "but my fists");
+		Utils.drawText(ctx, this.pos[0] - 60, this.pos[1] + 5, "are too small!");
+
+	};
 
 
 	move(deltaPos, opening) {
+		if (!opening && this.bullySpeech) this.bullySpeech = false;
+
 		if (this.attackAnimationCount === 0 && !opening && this.hitpoints > 0 && !this.gameOver) {
 			this.moveOnce(deltaPos)
 		}
 	}
 
 	moveOnce(deltaPos) {
-		// console.log(deltaPos);
 		if (this.map.checkBounds(this.center()[0] + deltaPos[0], this.center()[1] + deltaPos[1])) {
 
 			this.direction = 0;
@@ -135,115 +148,114 @@ class CeCe extends MovingObject {
 			else this.direction = 12;
 
 			this.switchImage();	
-			console.log(this.pos);
 
 		}
 	}		
 
 	// temporarily sets image to attack image
-	attack() {
-		if (this.attackAnimationCount === 0 && this.hitpoints > 0) {
-			this.directionHistory = this.direction;
-			this.posHistory[0] = this.pos[0];
-			this.posHistory[1] = this.pos[1];
+	// attack() {
+	// 	if (this.attackAnimationCount === 0 && this.hitpoints > 0) {
+	// 		this.directionHistory = this.direction;
+	// 		this.posHistory[0] = this.pos[0];
+	// 		this.posHistory[1] = this.pos[1];
 
-			// changes position and size to account for bigger attack image
-			if (this.direction === 0){
-				this.height = 1.8 * this.height;
-				this.pos[1] -= 24;
-			} else if (this.direction === 2) {
-				this.width = 1.8 * this.width;
-				this.pos[0] -= 24;
-			} else if (this.direction === 4) {
-				this.height = 1.8 * this.height;
-			} else if (this.direction === 6) {
-				this.width = 1.8 * this.width;
-			}
+	// 		// changes position and size to account for bigger attack image
+	// 		if (this.direction === 0){
+	// 			this.height = 1.8 * this.height;
+	// 			this.pos[1] -= 24;
+	// 		} else if (this.direction === 2) {
+	// 			this.width = 1.8 * this.width;
+	// 			this.pos[0] -= 24;
+	// 		} else if (this.direction === 4) {
+	// 			this.height = 1.8 * this.height;
+	// 		} else if (this.direction === 6) {
+	// 			this.width = 1.8 * this.width;
+	// 		}
 
-			this.direction = this.direction/2 + 8;
-			this.idx = 0; 
-			this.swordTipPos();
-		}
+	// 		this.direction = this.direction/2 + 8;
+	// 		this.idx = 0; 
+	// 		this.swordTipPos();
+	// 	}
 
-	}
+	// }
 
 	// loads all of the link images
-	loadImages() {
+	// loadImages() {
 
-		// north 'w'
-		this.lbu1 = new Image();
-		this.lbu1.onload = () => { return true; }
-		this.lbu1.src = './images/link/lbu1.png';
-		this.imageArray.push(this.lbu1);
+	// 	// north 'w'
+	// 	this.lbu1 = new Image();
+	// 	this.lbu1.onload = () => { return true; }
+	// 	this.lbu1.src = './images/link/lbu1.png';
+	// 	this.imageArray.push(this.lbu1);
 
-		this.lbu2 = new Image();
-		this.lbu2.onload = () => { return true; }
-		this.lbu2.src = './images/link/lbu2.png';
-		this.imageArray.push(this.lbu2);
+	// 	this.lbu2 = new Image();
+	// 	this.lbu2.onload = () => { return true; }
+	// 	this.lbu2.src = './images/link/lbu2.png';
+	// 	this.imageArray.push(this.lbu2);
 	
 
-		// west 'a'
-		this.llu2 = new Image();
-		this.llu2.onload = () => { return true; }
-		this.llu2.src = './images/link/llu2.png';
-		this.imageArray.push(this.llu2);		
+	// 	// west 'a'
+	// 	this.llu2 = new Image();
+	// 	this.llu2.onload = () => { return true; }
+	// 	this.llu2.src = './images/link/llu2.png';
+	// 	this.imageArray.push(this.llu2);		
 
-		this.llu1 = new Image();
-		this.llu1.onload = () => { return true; }
-		this.llu1.src = './images/link/llu1.png';
-		this.imageArray.push(this.llu1);
+	// 	this.llu1 = new Image();
+	// 	this.llu1.onload = () => { return true; }
+	// 	this.llu1.src = './images/link/llu1.png';
+	// 	this.imageArray.push(this.llu1);
 		
 
-		// south 's'
-		this.lfu1 = new Image();
-		this.lfu1.onload = () => { return true; }
-		this.lfu1.src = './images/link/lfu1.png';
-		this.imageArray.push(this.lfu1);
+	// 	// south 's'
+	// 	this.lfu1 = new Image();
+	// 	this.lfu1.onload = () => { return true; }
+	// 	this.lfu1.src = './images/link/lfu1.png';
+	// 	this.imageArray.push(this.lfu1);
 
-		this.lfu2 = new Image();
-		this.lfu2.onload = () => { return true; }
-		this.lfu2.src = './images/link/lfu2.png';
-		this.imageArray.push(this.lfu2);
+	// 	this.lfu2 = new Image();
+	// 	this.lfu2.onload = () => { return true; }
+	// 	this.lfu2.src = './images/link/lfu2.png';
+	// 	this.imageArray.push(this.lfu2);
 
 
-		// east 'd'
-		this.lru1 = new Image();
-		this.lru1.onload = () => { return true; }
-		this.lru1.src = './images/link/lru1.png';
-		this.imageArray.push(this.lru1);
+	// 	// east 'd'
+	// 	this.lru1 = new Image();
+	// 	this.lru1.onload = () => { return true; }
+	// 	this.lru1.src = './images/link/lru1.png';
+	// 	this.imageArray.push(this.lru1);
 
-		this.lru2 = new Image();
-		this.lru2.onload = () => { return true; }
-		this.lru2.src = './images/link/lru2.png';
-		this.imageArray.push(this.lru2);
+	// 	this.lru2 = new Image();
+	// 	this.lru2.onload = () => { return true; }
+	// 	this.lru2.src = './images/link/lru2.png';
+	// 	this.imageArray.push(this.lru2);
 		
 
-		////////////////////////////////////////
-		// load attack animations
-		this.lba = new Image();
-		this.lba.onload = () => { return true; }
-		this.lba.src = './images/link/lba.png';
-		this.imageArray.push(this.lba);
+	// 	////////////////////////////////////////
+	// 	// load attack animations
+	// 	this.lba = new Image();
+	// 	this.lba.onload = () => { return true; }
+	// 	this.lba.src = './images/link/lba.png';
+	// 	this.imageArray.push(this.lba);
 
-		this.lla = new Image();
-		this.lla.onload = () => { return true; }
-		this.lla.src = './images/link/lla.png';
-		this.imageArray.push(this.lla);
+	// 	this.lla = new Image();
+	// 	this.lla.onload = () => { return true; }
+	// 	this.lla.src = './images/link/lla.png';
+	// 	this.imageArray.push(this.lla);
 		
-		this.lfa = new Image();
-		this.lfa.onload = () => { return true; }
-		this.lfa.src = './images/link/lfa.png';
-		this.imageArray.push(this.lfa);
+	// 	this.lfa = new Image();
+	// 	this.lfa.onload = () => { return true; }
+	// 	this.lfa.src = './images/link/lfa.png';
+	// 	this.imageArray.push(this.lfa);
 
-		this.lra = new Image();
-		this.lra.onload = () => { return true; }
-		this.lra.src = './images/link/lra.png';
-		this.imageArray.push(this.lra);
+	// 	this.lra = new Image();
+	// 	this.lra.onload = () => { return true; }
+	// 	this.lra.src = './images/link/lra.png';
+	// 	this.imageArray.push(this.lra);
 
-		this.linkOver = new Image();
-		this.linkOver.onload = () => { return true; }
-		this.linkOver.src = './images/link/link_aloft.png';
-	}
+	// 	this.linkOver = new Image();
+	// 	this.linkOver.onload = () => { return true; }
+	// 	this.linkOver.src = './images/link/link_aloft.png';
+	// }
 	
 }
 
