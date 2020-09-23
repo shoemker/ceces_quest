@@ -340,24 +340,7 @@ class Game {
 	}
 
 	checkHit() {
-		// const tip = this.cece.swordTipPos();
 		this.enemies.forEach((enemy,i) => { 
-			// if (tip !== null) {
-			// 	const distance = Utils.distance(tip, enemy.center());
-
-			// 	if (distance < enemy.radius) {
-			// 		this.countToThirty++;		
-			// 		this.message = "Hit!"	
-			// 		enemy.hitPoints--;
-			// 		this.messageCount=1;
-			// 		if (enemy.hitPoints <= 0)		{
-			// 			this.enemies.splice(i,1)
-			// 			this.message = "Enemy Killed";
-			// 			this.add(new Rupee(enemy.pos, this.rupeeImg));
-
-			// 		}
-			// 	} 
-			// }
 
 			if (this.fireball && Utils.distance(this.fireball.center(), enemy.center()) < 21) {
 				this.countToThirty++;
@@ -370,7 +353,6 @@ class Game {
 					this.add(new Rupee(enemy.pos, this.rupeeImg));
 				}
 			}
-
 			
 		})
 		
